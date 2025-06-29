@@ -23,20 +23,14 @@
 
 typedef struct s_table t_table;
 
-typedef struct s_fork
-{
-	pthread_mutex_t	fork;
-	int	fork_id;
-}	t_fork;
-
 typedef struct s_philo
 {
 	int	id;
 	long	meals_counter;
 	bool	full;
 	long	last_meal_time;
-	t_fork	*l_fork;
-	t_fork	*r_fork;
+	pthread_mutex_t	*first_fork;
+	pthread_mutex_t	*second_fork;
 	pthread_t	thread_id;
 	t_table	*table;
 }	t_philo;
@@ -50,7 +44,7 @@ struct s_table
 	long	num_limit_meals;
 	long	start_sim;
 	bool	end_sim;
-	t_fork	*forks;
+	pthread_mutex_t	*forks;
 	t_philo	*philos;
 };
 
@@ -58,5 +52,6 @@ void	parse_input(t_table *table, char **av);
 char	*valid_str(char *str);
 long	ft_atol(char *str);
 void	error_exit(char *str);
+void	init_data(t_table *table);
 
 #endif

@@ -19,6 +19,7 @@ int	main(int ac, char **av)
 	if (ac == 5 || ac == 6)
 	{
 		parse_input(&table, av);
+		init_data(&table);
 	}
 	else
 		error_exit("wrong input");
