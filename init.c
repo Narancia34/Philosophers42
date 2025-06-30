@@ -6,7 +6,7 @@
 /*   By: mgamraou <mgamraou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:37:37 by mgamraou          #+#    #+#             */
-/*   Updated: 2025/06/28 12:01:00 by mgamraou         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:28:14 by mgamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,18 @@ static void	philo_init(t_table *table)
 	int		i;
 	t_philo	*philo;
 
-	i = -1;
-	while (++i < table->philo_num)
+	i = 0;
+	while (i < table->philo_num)
 	{
-		philo = table->philos + i;
+		philo = &table->philos[i];
 		philo->id = i + 1;
 		philo->full = false;
 		philo->meals_counter = 0;
+		philo->last_meal_time = 0;
 		philo->table = table;
+		pthread_mutex_init(&philo->philo_mutex, NULL);
 		assign_forks(philo, table->forks, i);
+		i++;
 	}
 }
 
@@ -58,8 +61,11 @@ void	init_data(t_table *table)
 
 	i = -1;
 	table->end_sim = false;
+	table->all_threads_ready = false;
 	table->philos = malloc(sizeof(t_philo) * table->philo_num);
 	table->forks = malloc(sizeof(pthread_mutex_t) * table->philo_num);
+	pthread_mutex_init(&table->table_mutex, NULL);
+	pthread_mutex_init(&table->write_mutex, NULL);
 	while (++i < table->philo_num)
 		pthread_mutex_init(&table->forks[i], NULL);
 	philo_init(table);

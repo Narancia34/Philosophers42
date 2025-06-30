@@ -6,7 +6,7 @@
 /*   By: mgamraou <mgamraou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 10:43:39 by mgamraou          #+#    #+#             */
-/*   Updated: 2025/06/28 11:04:18 by mgamraou         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:34:55 by mgamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,5 @@ long	ft_atol(char *str)
 		error_exit("not a number");
 	if (num > INT_MAX)
 		error_exit("value bigger than INT_MAX");
-	return 1;
+	return num;
 }

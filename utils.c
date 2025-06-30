@@ -1,25 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamraou <mgamraou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/27 10:28:21 by mgamraou          #+#    #+#             */
-/*   Updated: 2025/06/30 12:35:05 by mgamraou         ###   ########.fr       */
+/*   Created: 2025/06/29 15:05:59 by mgamraou          #+#    #+#             */
+/*   Updated: 2025/06/29 18:57:21 by mgamraou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	parse_input(t_table *table, char **av)
+long	get_time(void)
 {
-	table->philo_num = ft_atol(av[1]);
-	table->time_to_die = ft_atol(av[2]);
-	table->time_to_eat = ft_atol(av[3]);
-	table->time_to_sleep = ft_atol(av[4]);
-	if (av[5])
-		table->num_limit_meals = ft_atol(av[5]);
-	else
-		table->num_limit_meals = -1;
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1e3) + (tv.tv_usec / 1e3));
+}
+
+void	ft_usleep(long sleep_time, t_table *table)
+{
+	long	start;
+
+	start = get_time();
+	while (get_time() - start < sleep_time)
+	{
+		if (sim_finished(table))
+			break ;
+		usleep(10);
+	}
 }
