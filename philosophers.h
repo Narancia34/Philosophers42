@@ -53,12 +53,14 @@ struct s_table
 	long	time_to_sleep;
 	long	num_limit_meals;
 	long	start_sim;
+	long	threads_running;
 	bool	end_sim;
 	bool	all_threads_ready;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write_mutex;
 	t_philo	*philos;
+	pthread_t	monitor;
 };
 
 void	parse_input(t_table *table, char **av);
@@ -76,5 +78,8 @@ long	get_time(void);
 bool	sim_finished(t_table *table);
 void	ft_usleep(long sleep_time, t_table *table);
 void	print_status(t_philo_status status, t_philo *philo);
+void	*monitor_sim(void *data);
+bool	all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr);
+void	increment_long(pthread_mutex_t *mutex, long *value);
 
 #endif

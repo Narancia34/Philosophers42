@@ -11,7 +11,26 @@
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <pthread.h>
 
+static void	thinking_sim(t_philo *philo)
+{
+	print_status(THINKING, philo);
+}
+
+void	*one_philo(void	*data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	wait_all_threads(philo->table);
+	set_long(&philo->philo_mutex, &philo->last_meal_time, get_time());
+	increment_long(&philo->table->table_mutex, &philo->table->threads_running);
+	print_status(TAKEN_A_FORK, philo);
+	while (!sim_finished(philo->table))
+		ft_usleep(philo->table->time_to_sleep, philo->table);
+	return (NULL);
+}
 
 static void	eat_sim(t_philo *philo)
 {
@@ -35,6 +54,8 @@ void	*simulation(void *data)
 
 	philo = (t_philo *)data;
 	wait_all_threads(philo->table);
+	set_long(&philo->philo_mutex, &philo->last_meal_time, get_time());
+	increment_long(&philo->table->table_mutex, &philo->table->threads_running);
 	while (!sim_finished(philo->table))
 	{
 		if (philo->full)
@@ -42,9 +63,12 @@ void	*simulation(void *data)
 		eat_sim(philo);
 		print_status(SLEEPING, philo);
 		ft_usleep(philo->table->time_to_sleep, philo->table);
+		thinking_sim(philo);
 	}
 	return (NULL);
 }
+
+//WARNING: sim must insta stop after philo eaten number of meals needed (dont wait for routine to end)
 
 void	start_sim(t_table *table)
 {
@@ -53,14 +77,17 @@ void	start_sim(t_table *table)
 	i = 0;
 	if (table->num_limit_meals == 0)
 		return ;
+	else if (table->philo_num == 1)
+		pthread_create(&table->philos[0].thread_id, NULL, one_philo, &table->philos[0]);
 	else
 	{
 		while (i < table->philo_num)
 		{
-			pthread_create(&table->philos[i].thread_id, NULL, simulation,&table->philos[i]);
+			pthread_create(&table->philos[i].thread_id, NULL, simulation, &table->philos[i]);
 			i++;
 		}
 	}
+	pthread_create(&table->monitor, NULL, monitor_sim, table);
 	table->start_sim = get_time();
 	set_bool(&table->table_mutex, &table->all_threads_ready, true);
 	i = -1;
