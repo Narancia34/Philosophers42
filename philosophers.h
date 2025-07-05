@@ -81,5 +81,6 @@ void	print_status(t_philo_status status, t_philo *philo);
 void	*monitor_sim(void *data);
 bool	all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr);
 void	increment_long(pthread_mutex_t *mutex, long *value);
+void	clean_up(t_table *table);
 
 #endif

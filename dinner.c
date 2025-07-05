@@ -15,7 +15,19 @@
 
 static void	thinking_sim(t_philo *philo)
 {
+	long	time_to_eat;
+	long	time_to_sleep;
+	long	time_to_think;
+
 	print_status(THINKING, philo);
+	if (philo->table->philo_num % 2 == 0)
+		return ;
+	time_to_eat = philo->table->time_to_eat;
+	time_to_sleep = philo->table->time_to_sleep;
+	time_to_think = time_to_eat * 2 - time_to_sleep;
+	if (time_to_think < 0)
+		time_to_think = 0;
+	ft_usleep(time_to_think, philo->table);
 }
 
 void	*one_philo(void	*data)
@@ -93,4 +105,6 @@ void	start_sim(t_table *table)
 	i = -1;
 	while (++i < table->philo_num)
 		pthread_join(table->philos[i].thread_id, NULL);
+	set_bool(&table->table_mutex, &table->end_sim, true);
+	pthread_join(table->monitor, NULL);
 }

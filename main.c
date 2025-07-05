@@ -21,6 +21,7 @@ int	main(int ac, char **av)
 		parse_input(&table, av);
 		init_data(&table);
 		start_sim(&table);
+		clean_up(&table);
 	}
 	else
 		error_exit("wrong input");
