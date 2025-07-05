@@ -54,6 +54,7 @@ struct s_table
 	long	num_limit_meals;
 	long	start_sim;
 	long	threads_running;
+	long	philos_full;
 	bool	end_sim;
 	bool	all_threads_ready;
 	pthread_mutex_t	*forks;

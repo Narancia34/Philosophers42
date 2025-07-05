@@ -70,17 +70,18 @@ void	*simulation(void *data)
 	increment_long(&philo->table->table_mutex, &philo->table->threads_running);
 	while (!sim_finished(philo->table))
 	{
-		if (philo->full)
-			break ;
 		eat_sim(philo);
+		if (philo->full)
+		{
+			increment_long(&philo->table->table_mutex, &philo->table->philos_full);
+			break ;
+		}
 		print_status(SLEEPING, philo);
 		ft_usleep(philo->table->time_to_sleep, philo->table);
 		thinking_sim(philo);
 	}
 	return (NULL);
 }
-
-//WARNING: sim must insta stop after philo eaten number of meals needed (dont wait for routine to end)
 
 void	start_sim(t_table *table)
 {

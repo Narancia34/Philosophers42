@@ -36,6 +36,8 @@ void	*monitor_sim(void *data)
 		;
 	while (!sim_finished(table))
 	{
+		if (get_long(&table->table_mutex, &table->philos_full) == table->philo_num)
+			set_bool(&table->table_mutex, &table->end_sim, true);
 		i = -1;
 		while (++i < table->philo_num && !sim_finished(table))
 		{
